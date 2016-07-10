@@ -307,6 +307,7 @@
     <Compile Include="SetShortcutKeyForm.Designer.cs">
       <DependentUpon>SetShortcutKeyForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SimpleWebServer.cs" />
     <Compile Include="SingleGlobalInstance.cs" />
     <Compile Include="Tuple.cs" />
     <Compile Include="UnprotectPasswordForm.cs">
@@ -369,6 +370,7 @@
     <Compile Include="UpdateCheckForm.Designer.cs">
       <DependentUpon>UpdateCheckForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="WebAPI.cs" />
     <Compile Include="WinAPI.cs" />
     <Compile Include="WinAuthAuthenticator.cs" />
     <Compile Include="WinAuthConfig.cs" />

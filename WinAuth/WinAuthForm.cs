@@ -151,15 +151,39 @@ namespace WinAuth
 		/// Locker for WM_DEVICECHANGE
 		/// </summary>
 		private object m_deviceArrivalMutex = new object();
+        
+        /// <summary>
+        /// Web api for serving codes over a simple http protocol
+        /// </summary>
+        private WebAPI webAPI;
 
-#endregion
+    #endregion
 
-		/// <summary>
-		/// Load the main form
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-    private void WinAuthForm_Load(object sender, EventArgs e)
+        public void OnWebGetCode(string username, Action<string> resultCall)
+        {
+            if (InvokeRequired)
+            {
+                Invoke((MethodInvoker)delegate { OnWebGetCode(username, resultCall); });
+                return;
+            }
+
+            foreach (var auth in Config)
+            {
+                if (auth.Name == username) {
+                    auth.Sync();
+                    resultCall(auth.CurrentCode);
+                    return;
+                }
+            }
+            resultCall(null);
+        }
+   
+        /// <summary>
+        /// Load the main form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void WinAuthForm_Load(object sender, EventArgs e)
     {
       // get any command arguments
 			string password = null;
@@ -728,6 +752,9 @@ namespace WinAuth
 
 			// hook Steam notifications
 			HookSteam();
+
+            webAPI = new WebAPI(this);
+            webAPI.Start();
 
 			// save the position of the list within the form else starting as minimized breaks the size
 			_listoffset = new Rectangle(authenticatorList.Left, authenticatorList.Top, (this.Width - authenticatorList.Width), (this.Height - authenticatorList.Height));
@@ -1634,6 +1661,12 @@ namespace WinAuth
 
 			// remove the hotkey hook
 			UnhookHotkeys();
+
+            if (webAPI != null)
+            {
+                webAPI.Stop();
+                webAPI = null;
+            }
 
 			// remove USB hook
 			WinAPI.UnregisterUsbDeviceNotification(m_usbHandle);
