@@ -161,12 +161,13 @@ namespace WinAuth
 
         public void OnWebGetCode(string username, Action<string> resultCall)
         {
+/*
             if (InvokeRequired)
             {
                 Invoke((MethodInvoker)delegate { OnWebGetCode(username, resultCall); });
                 return;
             }
-
+*/
             foreach (var auth in Config)
             {
                 if (auth.Name == username) {

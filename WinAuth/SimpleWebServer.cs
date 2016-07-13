@@ -51,13 +51,20 @@ namespace SimpleWebServer
                             try
                             {
                                 string rstr = _responderMethod(ctx.Request);
-                                if (rstr == null) {
-                                    ctx.Response.StatusCode = 404;
-                                } else {
+                                if (rstr == null)
+                                {
+                                    ctx.Response.StatusCode = 405;
+                                }
+                                else
+                                {
                                     byte[] buf = Encoding.UTF8.GetBytes(rstr);
                                     ctx.Response.ContentLength64 = buf.Length;
                                     ctx.Response.OutputStream.Write(buf, 0, buf.Length);
                                 }
+                            }
+                            catch
+                            {
+                                // ignore all exceptions on purpose
                             }
                             finally
                             {
